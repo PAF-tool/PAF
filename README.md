@@ -9,16 +9,13 @@ PAF uses [`comby`](https://comby.dev), a syntax-aware code rewriting engine, to 
 
 ## 🚀 How to Run
 
-Make the script executable:
-
-```bash
-chmod +x PAF.py
-```
+wget https://github.com/VincentMichel01/PAF/releases/download/V1.0/paf-deb.deb
+sudo dpkg -i paf-deb.deb
 
 Then run:
 
 ```bash
-./PAF.py -c <file.c> [functions...] [-category <cat1> <cat2> ...] [-d <density>]
+paf -c <file.c> [functions...] [-category <cat1> <cat2> ...] [-d <density>]
 ```
 
 ---
