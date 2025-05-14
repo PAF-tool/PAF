@@ -13,7 +13,7 @@ PAF uses [`comby`](https://comby.dev), a syntax-aware code rewriting engine, to 
 ## 🚀 How to Run
 
 ```bash
-wget https://github.com/VincentMichel01/PAF/releases/download/V1.0/paf-deb.deb
+wget https://github.com/PAF-tool/PAF/releases/download/V1.0/paf-deb.deb
 sudo apt install ./paf-deb.deb
 sudo apt-get install -f
 ```
