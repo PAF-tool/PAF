@@ -1,12 +1,15 @@
 import sys
+import os
 from CmdParser import parse_args
 from debugTechParser import extract_includes_and_snippets
 from comby import inject_antidebug  # Replace with actual file name if not named yet
 
 def main():
     # Step 1: Extract includes and categorized snippets
-    includes, categories = extract_includes_and_snippets("antiDebug.c")
-    #{
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    anti_debug_path = os.path.join(script_dir, "antiDebug.c")
+
+    includes, categories = extract_includes_and_snippets(anti_debug_path)    #{
     #"time_based": {
     #    "low": [func1_code, func2_code],
     #    "high": [func3_code],
