@@ -11,7 +11,8 @@ PAF uses [`comby`](https://comby.dev), a syntax-aware code rewriting engine, to 
 
 ```bash
 wget https://github.com/VincentMichel01/PAF/releases/download/V1.0/paf-deb.deb
-sudo dpkg -i paf-deb.deb
+sudo apt install ./paf-deb.deb
+sudo apt-get install -f
 ```
 
 Then run:
