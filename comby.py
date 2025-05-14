@@ -9,13 +9,25 @@ from debugTechParser import extract_function_body
 # --------------------------------------------------------------------------
 # Run comby in-place on a file
 # --------------------------------------------------------------------------
-def run_comby(match_tpl: str, rewrite_tpl: str, file_path: Path):
+def run_comby(match_tpl: str, rewrite_tpl: str, file_path: Path) -> bool:
+    """Try a dry run with comby to see if the pattern exists, then do the in-place replacement."""
+    # Check if comby finds any match
+    # This is just used for our error handling so that it doesn't fail silently
+    preview = subprocess.run(
+        ["comby", match_tpl, rewrite_tpl, str(file_path), "-matcher", ".c"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE
+    )
+    if not preview.stdout:
+        return False
+
+    # Apply the change in-place if something matched
     subprocess.run(
         ["comby", match_tpl, rewrite_tpl, str(file_path),
          "-matcher", ".c", "-in-place"],
         check=True
     )
-
+    return True
 
 # --------------------------------------------------------------------------
 # Main injection function
@@ -96,13 +108,15 @@ def inject_antidebug(
 
 
             body_txt = "\n".join(combined_body_lines)
-            match_tpl = f"{func_name}(:[params]) {{:[body]}}"
-            rewrite_tpl = f"{func_name}(:[params]) {{\n{{\n{body_txt}\n}}\n:[body]}}"
+            match_tpl = f"{func_name}(:[params]):[spaces]{{:[body]}}"
+            rewrite_tpl = f"{func_name}(:[params]):[spaces]{{\n{{\n{body_txt}\n}}\n:[body]}}"
 
-            try:
-                run_comby(match_tpl, rewrite_tpl, modified)
-            except subprocess.CalledProcessError as e:
-                print(f"⚠️ Comby failed on {func_name} in {modified}: {e}")
+        try:
+            success = run_comby(match_tpl, rewrite_tpl, modified)
+            if not success:
+                print(f"⚠️ Function '{func_name}' not found in {modified}. Skipping.")
+        except subprocess.CalledProcessError as e:
+            print(f"⚠️ Comby failed on {func_name} in {modified}: {e}")
 
         # Add missing includes
         with open(modified, "r") as f:
